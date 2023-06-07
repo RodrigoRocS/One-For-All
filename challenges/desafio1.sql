@@ -1,74 +1,72 @@
 DROP DATABASE IF EXISTS SpotifyClone;
 CREATE DATABASE IF NOT EXISTS SpotifyClone;
 
-CREATE TABLE `SpotifyClone`.`Plano` (
+CREATE TABLE `SpotifyClone`.`planos` (
   `id_plano` INT NOT NULL AUTO_INCREMENT,
   `nome_plano` VARCHAR(45) NOT NULL,
   `valor_plano` DECIMAL(10,2) NOT NULL,
   PRIMARY KEY (`id_plano`)) 
  ENGINE = InnoDB;
   
-CREATE TABLE `SpotifyClone`.`Pessoa_Usuaria` (
+CREATE TABLE `SpotifyClone`.`pessoa_usuaria` (
   `id_pessoa_usuaria` INT NOT NULL AUTO_INCREMENT,
   `nome_pessoa_usuaria` VARCHAR(45) NOT NULL,
   `idade_pessoa_usuaria` INT NOT NULL,
   `id_plano` INT NOT NULL,
   `data_assinatura` DATE NOT NULL,
   PRIMARY KEY (`id_pessoa_usuaria`),
-  FOREIGN KEY (`id_plano`) REFERENCES `SpotifyClone`.`Plano` (`id_plano`))
+  FOREIGN KEY (`id_plano`) REFERENCES `SpotifyClone`.`planos` (`id_plano`))
 ENGINE = InnoDB;
 
-CREATE TABLE `SpotifyClone`.`Artista` (
+CREATE TABLE `SpotifyClone`.`artistas` (
   `id_artista` INT NOT NULL AUTO_INCREMENT,
   `nome_artista` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_artista`))
 ENGINE = InnoDB;
 
-CREATE TABLE `SpotifyClone`.`Album` (
+CREATE TABLE `SpotifyClone`.`albuns` (
   `id_album` INT NOT NULL AUTO_INCREMENT,
   `nome_album` VARCHAR(45) NOT NULL,
   `id_artista` INT NOT NULL,
   `ano_lancamento` YEAR NOT NULL,
   PRIMARY KEY (`id_album`),
-  FOREIGN KEY (`id_artista`) REFERENCES `SpotifyClone`.`Artista` (`id_artista`))
+  FOREIGN KEY (`id_artista`) REFERENCES `SpotifyClone`.`artistas` (`id_artista`))
 ENGINE = InnoDB;
 
-CREATE TABLE `SpotifyClone`.`Seguindo_Artistas` (
+CREATE TABLE `SpotifyClone`.`seguindo_artistas` (
   `id_pessoa_usuaria` INT NOT NULL,
   `id_artista` INT NOT NULL,
   PRIMARY KEY (`id_pessoa_usuaria`, `id_artista`),
-  FOREIGN KEY (`id_pessoa_usuaria`) REFERENCES `SpotifyClone`.`Pessoa_Usuaria` (`id_pessoa_usuaria`)
-  ON DELETE CASCADE
-  ON UPDATE CASCADE,
-  FOREIGN KEY (`id_artista`) REFERENCES `SpotifyClone`.`Artista` (`id_artista`))
+  FOREIGN KEY (`id_pessoa_usuaria`) REFERENCES `SpotifyClone`.`pessoa_usuaria` (`id_pessoa_usuaria`),
+  FOREIGN KEY (`id_artista`) REFERENCES `SpotifyClone`.`artistas` (`id_artista`))
 ENGINE = InnoDB;
 
-CREATE TABLE `SpotifyClone`.`Musicas` (
+CREATE TABLE `SpotifyClone`.`musicas` (
   `id_musica` INT NOT NULL AUTO_INCREMENT,
   `id_album` INT NOT NULL,
   `nome_musica` VARCHAR(45) NOT NULL,
   `duracao_segundos` INT NOT NULL,
   PRIMARY KEY (`id_musica`),
-  FOREIGN KEY (`id_album`) REFERENCES `SpotifyClone`.`Album` (`id_album`))
+  FOREIGN KEY (`id_album`) REFERENCES `SpotifyClone`.`albuns` (`id_album`))
 ENGINE = InnoDB;
 
-CREATE TABLE `SpotifyClone`.`Historico_Reproducoes` (
+CREATE TABLE `SpotifyClone`.`historico_reproducoes` (
   `id_pessoa_usuaria` INT NOT NULL,
   `id_musica` INT NOT NULL,
   `data_reproducao` DATETIME NOT NULL,
   PRIMARY KEY (`id_pessoa_usuaria`, `id_musica`),
-  FOREIGN KEY (`id_pessoa_usuaria`) REFERENCES `SpotifyClone`.`Pessoa_Usuaria` (`id_pessoa_usuaria`),
-  FOREIGN KEY (`id_musica`) REFERENCES `SpotifyClone`.`Musicas` (`id_musica`))
+  FOREIGN KEY (`id_pessoa_usuaria`) REFERENCES `SpotifyClone`.`pessoa_usuaria` (`id_pessoa_usuaria`),
+  FOREIGN KEY (`id_musica`) REFERENCES `SpotifyClone`.`musicas` (`id_musica`))
 ENGINE = InnoDB;
 
-INSERT INTO `SpotifyClone`.`Plano` (nome_plano, valor_plano)
+INSERT INTO `SpotifyClone`.`planos` (nome_plano, valor_plano)
   VALUES
   ('Gratuito', 0),
   ('Familiar', 7.99),
   ('Universitario', 5.99),
   ('Pessoal', 6.99);
 
-INSERT INTO `SpotifyClone`.`Pessoa_Usuaria` (nome_pessoa_usuaria, idade_pessoa_usuaria, id_plano, data_assinatura)
+INSERT INTO `SpotifyClone`.`pessoa_usuaria` (nome_pessoa_usuaria, idade_pessoa_usuaria, id_plano, data_assinatura)
   VALUES
   ('Barbara Liskov', 82, 1, '2019-10-20'),
   ('Robert Cecil Martin', 58, 1, '2017-01-06'),
@@ -81,7 +79,7 @@ INSERT INTO `SpotifyClone`.`Pessoa_Usuaria` (nome_pessoa_usuaria, idade_pessoa_u
   ('Judith Butler', 45, 4, '2020-05-13'),
   ('Jorge Amado', 58, 4, '2017-02-17');
 
-INSERT INTO `SpotifyClone`.`Artista` (nome_artista)
+INSERT INTO `SpotifyClone`.`artistas` (nome_artista)
   VALUES
   ('Beyoncé'),
   ('Queen'),
@@ -90,7 +88,7 @@ INSERT INTO `SpotifyClone`.`Artista` (nome_artista)
   ('Blind Guardian'),
   ('Nina Simone');
 
-INSERT INTO `SpotifyClone`.`Album` (nome_album, id_artista, ano_lancamento)
+INSERT INTO `SpotifyClone`.`albuns` (nome_album, id_artista, ano_lancamento)
   VALUES
   ('Renaissance', 1, 2022),
   ('Jazz', 2, 1978),
@@ -101,7 +99,7 @@ INSERT INTO `SpotifyClone`.`Album` (nome_album, id_artista, ano_lancamento)
   ('Somewhere Far Beyond', 5, 2007),
   ('I Put A Spell On You', 6, 2012);
 
-INSERT INTO `SpotifyClone`.`Seguindo_Artistas` (id_pessoa_usuaria, id_artista)
+INSERT INTO `SpotifyClone`.`seguindo_artistas` (id_pessoa_usuaria, id_artista)
   VALUES
   (1, 1),
   (1, 2),
@@ -118,7 +116,7 @@ INSERT INTO `SpotifyClone`.`Seguindo_Artistas` (id_pessoa_usuaria, id_artista)
   (9, 3),
   (10, 2);
   
-INSERT INTO `SpotifyClone`.`Musicas` (id_album, nome_musica, duracao_segundos)
+INSERT INTO `SpotifyClone`.`musicas` (id_album, nome_musica, duracao_segundos)
   VALUES
   (1, 'BREAK MY SOUL', 279),
   (1, 'VIRGO''S GROOVE', 369),
@@ -131,7 +129,7 @@ INSERT INTO `SpotifyClone`.`Musicas` (id_album, nome_musica, duracao_segundos)
   (7, 'The Bard''s Song', 244),
   (8, 'Feeling Good', 100);
 
-INSERT INTO `SpotifyClone`.`Historico_Reproducoes` (id_pessoa_usuaria, id_musica, data_reproducao)
+INSERT INTO `SpotifyClone`.`historico_reproducoes` (id_pessoa_usuaria, id_musica, data_reproducao)
   VALUES
   (1, 8, '2022-02-28 10:45:55'),
   (1, 2, '2020-05-02 05:30:35'),
